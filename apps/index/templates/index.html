@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+    {% load staticfiles %}
+{% block title %}
+    {{ user_page.first_name }} {{ user_page.last_name }}
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-7" id="admin-main-control">
+{#                <div class="container">#}
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h2><u>{{ user_page.first_name }} {{ user_page.last_name }}</u></h2>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="container">
+                        {#                            {% if user_page.is_active %}#}
+                        {#                                <span id="online">Online</span>#}
+                        {#                            {% endif %}#}
+                            </div>
+                        </div>
+                    </div>
+
+{#                    <hr>#}
+                    <br>
+                    <ul>
+                        <li>
+                            <div class="container message">
+                                <div class="row border message-space">
+                                    <div class="col-md-4">
+                                        <span><b>Дата рождения</b>:</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {% if user_page.birth_date %}
+                                            <span>{{ user_page.birth_date }}</span>
+                                        {% else %}
+                                            <span>Не указано</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row border message-space">
+                                    <div class="col-md-4">
+                                        <span><b>Город</b>:</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {% if user_page.locality %}
+                                            <span>{{ user_page.locality }}</span>
+                                        {% else %}
+                                            <span>Не указано</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row border message-space">
+                                    <div class="col-md-4">
+                                        <span><b>Телефон</b>:</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {% if user_page.phone %}
+                                            <span>{{ user_page.phone }}</span>
+                                        {% else %}
+                                            <span>Не указано</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+{#            </div>#}
+
+            <div class="col-md-1"></div>
+{#            <div class="col-md-3 border" id="right-column">#}
+            <div class="col-md-3 border" id="right-column">
+                <div class="container">
+                    {% if not user_page.avatar %}
+                    <img src="{% static 'default_user.jpeg' %}" />
+                    {% else %}
+                        <img src="{% static user_page.thumbnail %}" />
+                    {% endif %}
+                    <br>
+                    <br>
+                    <a href="{% url 'WriteMessage' pk=user_page.pk %}" class="btn btn-info btn-block" role="button">
+                        Написать сообщение
+                    </a>
+                    {% if user_page.pk != user.pk %}
+                        {% if user_page in friends %}
+                            <a href="{% url 'AddOrRemoveFriend' operation='remove' pk=user_page.pk %}"
+                               class="btn btn-info btn-block" role="button">
+                                    Удалить из друзей
+                            </a>
+                        {% elif user_page.pk in followers %}
+                            <a href="{% url 'AddOrRemoveFriend' operation='add' pk=user_page.pk %}"
+                            class="btn btn-info btn-block" role="button">
+                                    Добавить в друзья
+                            </a>
+                            {% for sub in subs%}
+                              {% if sub.subscriber == user_page and sub.is_viewed == False %}
+                                    <a href="{% url 'LeaveInSubscribers' pk=user_page.pk %}"
+                                    class="btn btn-info btn-block" role="button">
+                                        Оставить в подписчиках
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% elif user_page.pk in following %}
+                            <a href="{% url 'AddOrRemoveSubscribe' operation='remove' pk=user_page.pk %}"
+                            class="btn btn-info btn-block" role="button">
+                                    Отменить заявку
+                            </a>
+                        {% else %}
+                             <a href="{% url 'AddOrRemoveSubscribe' operation='add' pk=user_page.pk %}"
+                             class="btn btn-info btn-block" role="button">
+                                 Добавить в друзья
+                            </a>
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+    </div>
+    </div>
+
+{% endblock %}

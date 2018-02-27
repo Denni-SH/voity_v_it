@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Мои друзья{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/friends-style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <h2>Мои друзья:</h2>
+                <br>
+            </div>
+            <div class="container message" id="box">
+                <div class="row border message-space justify-content-between" style="padding: 0">
+                    <ul class="nav nav-tabs justify-content-between" style="width: 100%">
+                        <li class="nav-item text-center" style="width:33%">
+                          <a href="#friends" data-toggle="tab" class="nav-link active" id="friends-tabs">
+                              Друзья ({{ count_friends }})
+                          </a>
+                        </li>
+                        <li class="nav-item text-center" style="width:33%">
+                          <a href="#followers" data-toggle="tab" class="nav-link" id="friends-tabs">
+                              Подписчики ({{ count_followers }})
+                          </a>
+                        </li>
+                        <li class="nav-item text-center" style="width:33%">
+                          <a href="#following" data-toggle="tab" class="nav-link" id="friends-tabs">
+                              Подписки ({{ count_following }})
+                          </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content container-fluid" style="padding: 0">
+
+                        <div id="friends" class="tab-pane active">
+                            <div class="container-fluid" id="first" style="padding: 0">
+                                <ul>
+                                    {%for item in friends %}
+                                        <li>
+                                            <div class="container-fluid" id="second">
+                                                <div class="row border message-space">
+                                                    <div class="col-md-3">
+                                                        <img src="{% static item.thumbnail %}" width="90"
+                                                        height="90" class="rounded-circle">
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="row justify-content-between">
+                                                             <h4>
+                                                                <a href="{% url 'PersonalPage' pk=item.pk  %}">
+                                                                    {{ item.first_name}} {{ item.last_name }}
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div class="row">
+                                                            <a href="{% url 'WriteMessage' pk=item.pk  %}"
+                                                            class="btn btn-link" role="button">
+                                                                Написать сообщение
+                                                            </a>
+                                            <a href="{% url 'AddOrRemoveFriend' operation='remove' pk=item.pk %}"
+                                               class="btn btn-link" role="button">
+                                                Убрать из друзей
+                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% empty %}
+                                        <div class="container">
+                                            <br>
+                                            <h4>У вас еще нет друзей.</h4>
+                                            </div>
+                                    {%endfor%}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="followers" class="tab-pane fade">
+                            <div class="container-fluid" id="first" style="padding: 0">
+                                {% if count_followers > 0%}
+                                    <ul>
+                                    {%for item in new_followers %}
+                                        <li>
+                                            <div class="container-fluid" id="second">
+                                                <div class="row border message-space">
+                                                    <div class="col-md-3">
+                                                        <img src="{% static item.subscriber.thumbnail %}" width="90"
+                                                        height="90" class="rounded-circle">
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <h4>
+                                                            <a href="{% url 'PersonalPage' pk=item.subscriber.pk  %}">
+                                                                {{ item.subscriber.first_name}}
+                                                                {{ item.subscriber.last_name }}
+                                                            </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div class="row">
+                                                            <a href="{% url 'WriteMessage' pk=item.subscriber.pk  %}"
+                                                            class="btn btn-link" role="button">
+                                                                Написать сообщение
+                                                            </a>
+                                                        </div>
+                                                        <div class="row">
+                                        <a href="{% url 'AddOrRemoveFriend' operation='add' pk=item.subscriber.pk %}"
+                                        class="btn btn-link" role="button">
+                                            Добавить в друзья
+                                        </a>
+                                        <a href="{% url 'LeaveInSubscribers' pk=item.subscriber.pk %}"
+                                        class="btn btn-link" role="button">
+                                            Оставить в подписчиках
+                                        </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {%endfor%}
+                                    {%for item in followers %}
+                                        <li>
+                                         <div class="container-fluid" id="second">
+                                             <div class="row border message-space">
+                                                 <div class="col-md-3">
+                                                     <img src="{% static item.subscriber.thumbnail %}" width="90"
+                                                        height="90" class="rounded-circle">
+                                                 </div>
+                                                 <div class="col-md-9">
+                                                     <div class="row">
+                                                         <h3>
+                                                            <a href="{% url 'PersonalPage' pk=item.subscriber.pk  %}">
+                                                                {{ item.subscriber.first_name}}
+                                                                {{ item.subscriber.last_name }}
+                                                            </a>
+                                                        </h3>
+                                                     </div>
+                                                     <div class="row">
+                                        <a href="{% url 'WriteMessage' pk=item.subscriber.pk  %}"
+                                        class="btn btn-link" role="button">
+                                            Написать сообщение
+                                        </a>
+                                        <a href="{% url 'AddOrRemoveFriend' operation='add' pk=item.subscriber.pk %}"
+                                        class="btn btn-link" role="button">
+                                            Добавить в друзья
+                                        </a>
+                                                    </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                        </li>
+                                    {%endfor%}
+                                    </ul>
+                                {% else %}
+                                     <div class="container">
+                                        <br>
+                                        <h4>У вас нет подписчиков.</h4>
+                                        <br>
+                                     </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div id="following" class="tab-pane fade">
+                            <div class="container-fluid" id="first" style="padding: 0">
+                                <ul>
+                                    {%for item in following %}
+                                        <li>
+                                         <div class="container-fluid" id="second">
+                                             <div class="row border message-space">
+                                                 <div class="col-md-3">
+                                                     <img src="{% static item.user.thumbnail %}" width="90"
+                                                        height="90" class="rounded-circle">
+                                                 </div>
+                                                 <div class="col-md-9">
+                                                     <div class="row">
+                                                         <h3>
+                                                            <a href="{% url 'PersonalPage' pk=item.user.pk  %}">
+                                                                {{ item.user.first_name}} {{ item.user.last_name }}
+                                                            </a>
+                                                        </h3>
+                                                     </div>
+                                                     <div class="row">
+                                        <a href="{% url 'WriteMessage' pk=item.user.pk  %}"
+                                        class="btn btn-link" role="button">
+                                            Написать сообщение
+                                        </a>
+                                        <a href="{% url 'AddOrRemoveSubscribe' operation='remove' pk=item.user.pk %}"
+                                        class="btn btn-link" role="button">
+                                            Отменить заявку
+                                        </a>
+                                            </div>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                        </li>
+                                    {% empty %}
+                                            <div class="container">
+                                                <br>
+                                                <h4>У вас нет подписок.</h4>
+                                            </div>
+                                    {%endfor%}
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                <div class="container message fixed-bottom col-md-6">
+                    <div class="row border message-space">
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

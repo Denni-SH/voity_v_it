@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="container message">
+                    <div class="row border justify-content-between room-space">
+                        <a href="{% url 'RoomsList' %} " style="font-size: large; padding-top: 1%"> &laquo; Hазад</a>
+                        {% if type == 'direct'%}
+                            <span class="vcenter">
+                                <b>
+                                    {{ destination.first_name}} {{ destination.last_name }}
+                                </b>
+                            </span>
+                            <img src="{% static destination.thumbnail %}" width="38" height="38" class="rounded-circle">
+
+                        {% else %}
+                            <p class="vcenter">
+                                <b>
+                                    {{ room.label }}
+                                </b>
+                            </p>
+                            <img src="{% static 'it.png' %}" width="38" height="38" class="rounded-circle">
+
+                        {% endif %}
+                    </div>
+                        {% if type == 'group' %}
+                            <div class="row border room-space">
+                                <p class="quiet">
+                                    Добавь своих друзей в конференцию по этой ссылке:
+                                    <code>{{ request.get_host }}/dialogues/join/group={{ room.key }}/</code>
+                                </p>
+                            </div>
+                        {% endif %}
+                    <div class="row border" >
+                        <form id="chatform">
+
+                            <table id="chat" cellpadding="20">
+                                <tbody>
+                                {% for message in messages %}
+                                    <tr class="message-list">
+                                      <td><span>{{ message.handle }}:</span></td>
+                                      <td><span style="word-break: break-all">{{ message.message }}</span></td>
+                                      <td id="time">{{ message.formatted_timestamp }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                                <tfoot class="col-md-12">
+                                <tr>
+
+                                    <td colspan="3" class="message-input fix message border" style="margin-left:10%">
+                                    <input id="message" type="text" placeholder="Введите сообщение..."
+                                           autofocus="" autocomplete="off" >
+                                    <button type="submit" id="go">Отправить</button>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="container message fixed-bottom col-md-6">
+                    <div class="row border message-space">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+
+
+
+
+{#    <a href="{% url 'RoomsList' %}"> &laquo; Hазад</a>#}
+{#    <h1><u>{{ room.label }}</u></h1>#}
+{##}
+{#    {% if type == 'group' %}#}
+{#          <p class="quiet">#}
+{#                Anyone with this URL can join the room and chat:#}
+{#                <code>{{ request.get_host }}/dialogues/join/group={{ room.key }}/</code>#}
+{#          </p>#}
+{#    {% endif %}#}
+{##}
+{#    <form id="chatform">#}
+{#    <table id="chat">#}
+{#      <tbody>#}
+{#           {% for message in messages %}#}
+{#              <tr>#}
+{#                  <td><b><u>{{ message.handle }}:</u></b></td>#}
+{#                  <td>{{ message.message }}</td>#}
+{#                  <td><sub>{{ message.formatted_timestamp }}</sub></td>#}
+{#              </tr>#}
+{#           {% endfor %}#}
+{#      </tbody>#}
+{#      <tfoot>#}
+{#      <tr>#}
+{#        <td colspan=2>#}
+{#              <input id="message" type="text" placeholder="Введите сообщение..." autofocus="" autocomplete="off">#}
+{#          <button type="submit" id="go">Отправить</button>#}
+{#        </td>#}
+{#      </tfoot>#}
+{#    </table>#}
+{#  </form>#}
+{% endblock content %}
+
+{% block afterbody %}
+  <script type="text/javascript" src='{% static "js/jquery-1.12.1.min.js" %}'></script>
+  <script type="text/javascript" src='{% static "reconnecting-websocket.min.js" %}'></script>
+  <script type="text/javascript" src='{% static "js/chat.js" %}'></script>
+{% endblock afterbody %}

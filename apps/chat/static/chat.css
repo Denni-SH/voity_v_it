@@ -1,0 +1,58 @@
+
+
+p.deck {
+    font-size: 2.5rem;
+    font-weight: 200;
+}
+.quiet {
+    font-size: 90%;
+    color: #999;
+}
+
+#chatform {
+    width: 100%;
+}
+
+
+.message {
+    background-color: white;
+}
+
+.message-list:hover {
+    opacity: 1;
+    background: #F4F7FA;
+    cursor: pointer;
+}
+
+.message-space {
+    padding:20px;
+    padding-left: 0;}
+
+.room-space {
+    padding:20px;
+}
+
+a {
+    color: black;
+}
+
+.message-item {
+    text-indent: 1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-input {
+    margin: auto;
+    align-content: center;
+    align-items: center;
+    align-self: center;
+}
+
+.fix {
+    position: fixed;
+    bottom: 2em;
+
+}
+

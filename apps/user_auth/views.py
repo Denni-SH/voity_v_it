@@ -1,21 +1,28 @@
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render
-from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView
+from django.urls import reverse
+from django.views.generic import CreateView
 from .forms import UserCreation
 from .models import User
-from django import forms
-def hello(request):
-    return render(request, 'user_auth/index.html')
 
 
 class SignUp(CreateView):
+    """
+    Registration view
+    """
     template_name = "registration/register.html"
     model = User
     form_class = UserCreation
-    success_url = "/"
+    success_url = "/account/login/"
 
 
 class SignIn(LoginView):
+    """
+    Authentication view
+    """
+    def get_user(self):
+        return self.request.user.pk
+
     template_name = 'registration/login.html'
 
+    def get_success_url(self):
+        return reverse('PersonalPage', kwargs={'pk': self.request.user.pk})

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Диалоги{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row justify-content-between">
+                    <h2>Мои диалоги:</h2>
+
+                    <a href="{% url 'NewConference' %}" data-toggle="tooltip"
+                       title="Создать новую беседу" style="padding-top: 7px;">
+                        <i class="fa fa-plus" style="font-size:32px; color: #FCA205;" ></i>
+                    </a>
+                </div>
+                <br>
+                <ul>
+                {% for item in rooms %}
+                    {% if item.type == 'direct' %}
+                        <li>
+                            <a href="{% url 'DirectRoom' pk=item.room.pk%}">
+                                <div class="container message message-list">
+                                    <div class="row border message-space">
+                                        <div class="col-md-1">
+                                            <img src="{% static item.destination.thumbnail %}"
+                                                 width="38" height="38" class="rounded-circle">
+                                        </div>
+                                        <div class="col-md-11">
+                                            <div class="row justify-content-between">
+                                                 <span style="padding-left: 1em;">
+                                                    <b style="font-size: larger">
+                                                        {{ item.destination.first_name }}
+                                                        {{ item.destination.last_name }}
+                                                    </b>
+                                                 </span>
+                                                <span>
+                                                    {{ item.message.timestamp|date:" d M" }}
+                                                </span>
+                                            </div>
+                                            <div class="row ">
+                                            {% if item.message %}
+                                                <span class="message-item">
+                                                    <u><b>{{ item.message.handle }}</b></u>:
+                                                    {{ item.message.message }}
+                                                </span>
+                                            {% else %}
+                                                <span style="text-indent: 30px">
+                                                    Сообщений нет
+                                                </span>
+                                            {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'GroupRoom' pk=item.room.pk%}" id="room-li">
+                                <div class="container message message-list">
+                                    <div class="row border message-space">
+                                        <div class="col-md-1">
+                                                <img src="{% static 'it.png' %}" width="38"
+                                                     height="38" class="rounded-circle">
+                                            </div>
+                                        <div class="col-md-11">
+                                                    <div class="row justify-content-between">
+                                                        <span style="padding-left: 1em; font-size: larger;">
+                                                            <b>
+                                                                {{ item.room }}
+                                                            </b>
+                                                        </span>
+                                                        <span>
+                                                                {{ item.message.timestamp|date:" d M" }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="row">
+                                                        {% if item.message %}
+                                                        <span class="message-item">
+                                                            <b>{{ item.message.handle }}</b>:
+                                                            {{ item.message.message }}
+                                                        </span>
+                                                        {% else %}
+                                                            <span style="text-indent: 30px">
+                                                            Сообщений нет
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+                <div class="container message fixed-bottom col-md-6">
+                    <div class="row border message-space">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+
+{% endblock content %}
+

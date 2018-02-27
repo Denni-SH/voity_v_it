@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Настройки профиля{% endblock %}
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+	                <h2 class="text-center">Редактировать профиль:</h2>
+                </div>
+                <br>
+                <form method="POST" class="post-form" enctype='multipart/form-data'>{% csrf_token %}
+                    <ul>
+                        {% for field in form %}
+                            <li>
+                                <div class="container message message-list">
+                                    <div class="row border message-space">
+                                        <div class="col-md-4">
+                                            <span><b>{{ field.label }}</b>:</span>
+                                        </div>
+                                        <div class="col-md-8">
+                                             <span>{{ field }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+		            <button type="submit" class="save btn btn-warning">Сохранить</button>
+                </form>
+                <div class="container message fixed-bottom col-md-6">
+                    <div class="row border message-space">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div >
+
+</div>
+
+{% endblock %}

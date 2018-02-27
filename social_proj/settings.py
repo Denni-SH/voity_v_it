@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,13 +25,15 @@ SECRET_KEY = 'n2o##@8dl^m^18gz9dhsc+w0_38poi8mzj@+=8@50bb+51uo$z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','voity_v_it']
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'user_auth.User'
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 
 PROJECT_PATH = os.path.join(BASE_DIR, 'social_proj/../templates')
 # Application definition
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,8 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.index',
+    'channels',
     'apps.user_auth',
+    'apps.chat',
+    'apps.index',
+    'apps.search_app',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.index.context_processors.side_bar_context',  # add this line
             ],
         },
     },
@@ -108,25 +114,69 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
-USE_I18N = True
-
-USE_L10N = True
+#
 
 USE_TZ = True
 
+# USE_I18N = True
+# USE_L10N = True
+USE_I18N = True
+USE_L10N = False
 
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
+
+DATE_FORMAT = 'd E Y'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
-#
+
+
+LOGIN_REDIRECT_URL = '/account/login/'
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'media'),
 )
 
-LOGIN_REDIRECT_URL = '/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Channel settings
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('localhost', 6379)],
+        },
+        "ROUTING": "social_proj.routing.channel_routing",
+    },
+}
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO'
+        },
+        'chat': {
+            'handlers': ['console'],
+            'propagate': False,
+            'level': 'DEBUG',
+        },
+    },
+}

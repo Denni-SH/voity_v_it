@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Результаты поиска{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <h2>Результаты поиска:</h2>
+                <br>
+            </div>
+            <div class="container message" id="box">
+                <div class="row border message-space justify-content-between" style="padding: 0">
+                       <div class="container-fluid" id="first" style="padding: 0">
+                            {% if results %}
+                                <ul>
+                                {%for item in results %}
+                                    <li>
+                                        <div class="container-fluid" id="second">
+                                            <div class="row border message-space">
+                                                <div class="col-md-3">
+                                                    <img src="{% static item.thumbnail %}" width="90"
+                                                    height="90" class="rounded-circle">
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="row justify-content-between">
+                                                         <h4>
+                                                            <a href="{% url 'PersonalPage' pk=item.pk  %}">
+                                                                {{ item.first_name}} {{ item.last_name }}
+                                                            </a>
+                                                        </h4>
+                                                    </div>
+                                                    <div class="row">
+                                                        <a href="{% url 'WriteMessage' pk=item.pk  %}"
+                                                        class="btn btn-link" role="button">
+                                                            Написать сообщение
+                                                        </a>
+                                        <a href="{% url 'AddOrRemoveFriend' operation='remove' pk=item.pk %}"
+                                           class="btn btn-link" role="button">
+                                            Убрать из друзей
+                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                {%endfor%}
+                            </ul>
+                            {% else %}
+                                <div class="container">
+                                    <br>
+                                    <h4>
+                                        Не найдено пользователей по вашему запросу.
+                                        <br>
+                                        Внимание: в поиске учитывается регистр!
+                                    </h4>
+                                    <br>
+                                </div>
+                            {% endif %}
+                       </div>
+
+                </div>
+            </div>
+
+            <div class="container message fixed-bottom col-md-6">
+                <div class="row border message-space">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
